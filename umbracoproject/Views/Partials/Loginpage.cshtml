@@ -1,0 +1,166 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+
+
+@using Umbraco.Web.Models
+@using System.Web.Mvc.Html
+@using Umbraco.Web
+@using Umbraco.Web.Controllers
+@using Umbraco.Core.Models;
+@using Umbraco.Core.Services;
+@using umbracoproject.Controllers;
+
+@{
+    var loginModel = new LoginModel();
+    
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+
+}
+
+@*Login and register functions, register not working completely, after registering it is required to go to backoffice and assign a role to the user *@
+
+
+@{
+var registerModel = Members.CreateRegistrationModel();
+var success = TempData["FormSuccess"] != null;
+}
+
+
+    
+<div class="content-wrap">
+
+    <div class="container clearfix">
+
+        <div class="col_one_third nobottommargin">
+
+            <div class="well well-lg nobottommargin">
+@using (Html.BeginUmbracoForm<UmbLoginController>("HandleLogin"))
+{
+   
+           
+                    <fieldset>
+                        <h3>Login to your Account</h3>
+                        @Html.ValidationSummary("loginModel", true)
+                        <div class="col_full">
+
+                            @Html.LabelFor(m => loginModel.Username)
+                            @Html.TextBoxFor(m => loginModel.Username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => loginModel.Username)
+                        </div>
+
+                        <div class="col_full">
+                            @Html.LabelFor(m => loginModel.Password)
+                            @Html.PasswordFor(m => loginModel.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => loginModel.Password)
+                        </div>
+
+                        <div class="col_full nobottommargin">
+                            <button class="button button-3d nomargin">Login</button>
+
+                        </div>
+                    </fieldset>
+            
+}
+            </div>
+
+        </div>
+
+
+
+
+        <div class="col_two_third col_last nobottommargin">
+@{ 
+  
+}
+
+            <h3>Don't have an Account? Register Now.</h3>
+@if (success)
+{
+  
+
+
+    <p>Registration succeeeded.</p>
+}
+else
+{
+    using (Html.BeginUmbracoForm<UmbRegisterController>("HandleRegisterMember"))
+    {
+        <fieldset>
+            <legend>Register Member</legend>
+
+            @Html.ValidationSummary("registerModel", true)
+            <div class="col_half">
+                @Html.LabelFor(m => registerModel.Name)
+                @Html.TextBoxFor(m => registerModel.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => registerModel.Name)
+                <br />
+                </div>
+        
+            <div class="col_half">
+                @Html.LabelFor(m => registerModel.Email)
+                @Html.TextBoxFor(m => registerModel.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => registerModel.Email)
+                <br />
+                </div>
+          
+            <div class="col_half">
+                @Html.LabelFor(m => registerModel.Password)
+                @Html.PasswordFor(m => registerModel.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => registerModel.Password)
+                <br />
+                @{ 
+
+
+                    //DOESNT WORK FOR SOME REASON WEIRD ERROR
+                    var membserv = ApplicationContext.Current.Services.MemberGroupService;
+                    var memb = ApplicationContext.Current.Services.MemberService;
+                    memb.AssignRole(registerModel.Username, "NormalUser");
+
+
+
+
+
+
+
+                }
+                   
+
+            
+            </div>
+             
+                    @if (registerModel.MemberProperties != null)
+                    {
+                    
+                    for (var i = 0; i < registerModel.MemberProperties.Count; i++)
+                    {
+                        <div class="col_half">
+                            @Html.LabelFor(m => registerModel.MemberProperties[i].Value, registerModel.MemberProperties[i].Name)
+                            @Html.EditorFor(m => registerModel.MemberProperties[i].Value)
+                            @Html.HiddenFor(m => registerModel.MemberProperties[i].Alias)
+                        
+                            <br />
+                            </div>
+
+                        }
+
+                    }
+
+            <div class="col_half">
+                @Html.HiddenFor(m => registerModel.MemberTypeAlias)
+                @Html.HiddenFor(m => registerModel.RedirectUrl)
+                @Html.HiddenFor(m => registerModel.UsernameIsEmail)
+                </div>
+            <div class="clear"></div>
+                <button class="button button-3d button-black nomargin">Register</button>
+</fieldset>
+    }
+}
+
+
+
+        </div>
+
+    </div>
+
+</div>
+

@@ -1,0 +1,42 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+
+
+@*speakers start*@
+<div class="heading-block center">
+    <h2>Speakers.</h2>
+    <span>Over 30 Speakers &amp; 1000+ Developers in attendance.</span>
+</div>
+
+
+
+@{
+    var speakers = Model.Content.Site().Descendants<NewSpeakerPost>().Take(5);
+
+    foreach (var item in speakers)
+    {
+<div class="col_one_fifth" style="    width: 15.8%;
+    margin-left: 2%;
+    margin-right: 2%;">
+
+    <div class="team">
+        <div class="team-image">
+            <img class="portfolio-image" src="@item.SpeakerPicturePost.Url" alt="@item.SpeakernamePost">
+        </div>
+        <div class="team-desc">
+           <a href="@item.Url"> <div class="team-title"><h4>@item.SpeakernamePost</h4></div> </a>
+            <div class="team-content">@item.SpeakerDescriptionPost</div>
+        </div>
+    </div>
+    </div>
+
+    }
+
+}
+
+<div class="clear"></div>
+
+     
+@*speakers end*@
+
+
+    

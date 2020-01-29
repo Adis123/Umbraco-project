@@ -1,0 +1,16 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.PracticalInfo>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+    Layout = "SiteMaster.cshtml";
+}
+<section id="content">
+
+    <div class="content-wrap">
+
+        <div class="container clearfix">
+
+      
+            @Html.GetGridHtml(Model.Content, "GridPracticalInfo")
+            </div>
+        </div>
+</section>
